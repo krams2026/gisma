@@ -16,6 +16,30 @@ body { font-family: 'Inter', sans-serif; font-size: 14px; }
 .value { font-weight: 400; color: var(--text); }
 .meta { font-weight: 500; }
 
+/* псевдоэлемент для светящейся рамки */
+.panel {
+    position: relative;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+
+    /* двойной фон для градиентной рамки */
+    background: linear-gradient(145deg, #0f1420, #141a2b); /* внутренний фон */
+    border: 3px solid transparent; /* для эффекта рамки */
+    background-clip: padding-box; /* фон внутри панели */
+}
+
+/* псевдоэлемент для рамки */
+.panel::before {
+    content: "";
+    position: absolute;
+    top: -3px; bottom: -3px;
+    left: -3px; right: -3px;
+    border-radius: 20px;
+    background: linear-gradient(45deg, #3fa9f5, #00f0ff);
+    z-index: -1;
+}
+
 /* Кнопка очистки */
 .danger-btn {
     background: linear-gradient(135deg, #ff4d4d, #ff6b6b);
@@ -114,13 +138,7 @@ padding:7px 14px;border-radius:8px;
 border:1px solid var(--border);
 background:var(--panel);color:var(--text);cursor:pointer
 }
-.panel {
-  background: linear-gradient(145deg, #0f1420, #141a2b); /* мягкий градиент */
-  border: 1px solid rgba(63, 169, 245, 0.3);
-  border-radius: 20px;
-  padding: 20px; /* добавляем внутренние отступы */
-  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-}
+
 .header {
   display: flex;
   gap: 20px; /* расстояние между фото и мета */
@@ -355,7 +373,7 @@ display:flex;justify-content:space-between
 <div class="section">
   <div class="section-title">Документация / Соглашение</div>
   <div class="about">
-    <b>важно:</b> использование панели gisma подразумевает соблюдение правил конфиденциальности и корректного использования данных. ознакомьтесь с документацией и соглашением, чтобы понимать ограничения и ответственность при работе с информацией.
+    <b>важно:</b> Использование панели подразумевает соблюдение конфиденциальности и корректной работы с данными. Перед началом рекомендуется ознакомиться с документацией и правилами, чтобы понимать ограничения, ответственность и принципы обработки информации в системе.
   </div>
 </div>
 
