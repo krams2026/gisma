@@ -8,6 +8,88 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
+
+/* Шрифт и общий стиль */
+
+body { font-family: 'Inter', sans-serif; font-size: 14px; }
+.label { font-weight: 500; color: var(--muted); }
+.value { font-weight: 400; color: var(--text); }
+.meta { font-weight: 500; }
+
+/* Кнопка очистки */
+.danger-btn {
+    background: linear-gradient(135deg, #ff4d4d, #ff6b6b);
+    border: none;
+    padding: 12px 22px;
+    border-radius: 14px;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    box-shadow: 0 5px 20px rgba(255, 77, 77, 0.4);
+}
+
+.danger-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 77, 77, 0.6);
+}
+
+/* Модальное окно */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 10, 20, 0.7);
+    backdrop-filter: blur(6px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal-box {
+    background: #111827;
+    padding: 25px;
+    border-radius: 18px;
+    text-align: center;
+    width: 320px;
+    color: white;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    animation: fadeIn 0.2s ease;
+}
+
+.modal-buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.modal-buttons button {
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#cancelClear {
+    background: #374151;
+    color: white;
+}
+
+.danger {
+    background: #ff4d4d;
+    color: white;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
 :root{
 --bg:#0a0d12;--panel:#0f1420;--border:#1b2333;
 --text:#e6e9ef;--muted:#8b93a7;
@@ -32,29 +114,51 @@ padding:7px 14px;border-radius:8px;
 border:1px solid var(--border);
 background:var(--panel);color:var(--text);cursor:pointer
 }
-.panel{
-background:var(--panel);border:1px solid var(--border);
-border-radius:16px;overflow:hidden;
-box-shadow:0 20px 60px rgba(0,0,0,.45)
+.panel {
+  background: linear-gradient(145deg, #0f1420, #141a2b); /* мягкий градиент */
+  border: 1px solid rgba(63, 169, 245, 0.3);
+  border-radius: 20px;
+  padding: 20px; /* добавляем внутренние отступы */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
 }
-.header{
-display:flex;gap:24px;padding:22px;
-border-bottom:1px solid var(--border)
+.header {
+  display: flex;
+  gap: 20px; /* расстояние между фото и мета */
+  padding: 22px;
+  border-bottom: 1px solid var(--border);
+  align-items: center;
+  justify-content: flex-start;
 }
+
+/* сам блок фото */
+.photo-box {
+  width: 120px;
+  height: 120px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  cursor: pointer;
+  flex-shrink: 0; /* не сжимать блок */
+}
+
 /* === CYBER OSINT PHOTO STYLE === */
-.photo-box{
-position:relative;
-width:170px;
-height:170px;
-border-radius:18px;
-overflow:hidden;
-cursor:pointer;
-transition:0.3s;
-background:#0b111a;
-border:1px solid rgba(63,169,245,.3);
-box-shadow:
-0 0 15px rgba(63,169,245,.2),
-inset 0 0 15px rgba(63,169,245,.05);
+.photo-gallery{
+display:flex;
+gap:18px;
+flex-wrap:wrap;
+}
+
+.meta{
+font-size:13px;
+color:var(--muted);
+line-height:1.8;
+background:rgba(0,0,0,0.15);
+padding:14px 18px;
+border-radius:12px;
+border:1px solid var(--border);
+min-width:180px;
+backdrop-filter: blur(6px);
 }
 
 /* Неоновая анимация */
@@ -81,29 +185,35 @@ pointer-events:none;
 100%{background-position:0% 50%}
 }
 
-/* Эффект сканирования */
-.photo-box::after{
-content:"";
-position:absolute;
-left:0;
-width:100%;
-height:2px;
-background:rgba(63,169,245,.7);
-box-shadow:0 0 10px #3fa9f5;
-animation:scan 3s linear infinite;
-}
-
 @keyframes scan{
 0%{top:0}
 100%{top:100%}
 }
 
+.photo-box{
+  width:130px;
+  height:130px;
+  border-radius:14px;
+  overflow:hidden;
+  cursor:pointer;
+  position:relative;
+  border:1px solid rgba(63,169,245,.3);
+  background:#0b111a;
+}
 .photo-box img{
-width:100%;
-height:100%;
-object-fit:cover;
-z-index:2;
-position:relative;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  position:relative;
+}
+.photo-placeholder{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:100%;
+  font-size:12px;
+  color:var(--muted);
+  letter-spacing:1px;
 }
 
 .photo-placeholder{
@@ -115,10 +225,14 @@ font-size:12px;
 color:var(--muted);
 letter-spacing:1px;
 }
-.field{
-display:flex;align-items:center;
-padding:10px;border-bottom:1px solid var(--border);
-transition:.2s;cursor:grab
+.field {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 6px;
+  background: rgba(63,169,245,0.05); /* легкая подсветка */
 }
 .field:hover{background:var(--accent-soft)}
 .label{width:220px;color:var(--muted);font-size:13px}
@@ -138,10 +252,16 @@ flex:1;min-width:160px;
 background:var(--bg);border:1px solid var(--border);
 color:var(--text);padding:8px 10px;border-radius:8px
 }
-.controls button,.export button{
-padding:8px 14px;border-radius:8px;
-border:1px solid var(--border);
-background:var(--panel);color:var(--text);cursor:pointer
+.controls button, .toggle, .export button {
+  transition: all 0.2s ease;
+}
+
+.section { margin-bottom: 24px; }
+
+.controls button:hover, .toggle:hover, .export button:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
 }
 .about{
 font-size:13px;line-height:1.7;color:var(--muted)
@@ -177,15 +297,34 @@ display:flex;justify-content:space-between
 <div class="panel" id="panel">
 
 <div class="header">
-<label class="photo-box">
-<input type="file" accept="image/*" onchange="loadPhoto(event)">
-<div class="photo-placeholder">ADD PHOTO</div>
-<img id="photo" hidden>
-</label>
-<div class="meta">
-<div>Дата: <span id="date"></span></div>
-<div>Время: <span id="time"></span></div>
+  <!-- Фото 1 -->
+  <label class="photo-box">
+    <input type="file" accept="image/*" onchange="loadPhoto(event, 1)">
+    <div class="photo-placeholder">ADD PHOTO</div>
+    <img id="photo1" hidden>
+  </label>
+
+  <!-- Фото 2 -->
+  <label class="photo-box">
+    <input type="file" accept="image/*" onchange="loadPhoto(event, 2)">
+    <div class="photo-placeholder">ADD PHOTO</div>
+    <img id="photo2" hidden>
+  </label>
+
+  <!-- Фото 3 -->
+  <label class="photo-box">
+    <input type="file" accept="image/*" onchange="loadPhoto(event, 3)">
+    <div class="photo-placeholder">ADD PHOTO</div>
+    <img id="photo3" hidden>
+  </label>
+
+  <!-- Дата и время -->
+  <div class="meta">
+    <div>Дата: <span id="date"></span></div>
+    <div>Время: <span id="time"></span></div>
+  </div>
 </div>
+
 </div>
 
 <div class="section">
@@ -205,6 +344,7 @@ display:flex;justify-content:space-between
 <button onclick="exportTXT()">TXT</button>
 <button onclick="exportHTML()">HTML</button>
 <button onclick="exportPDF()">PDF</button>
+<button onclick="clearPanel()">Очистить панель</button>
 </div>
 </div>
 
@@ -228,6 +368,17 @@ GISMA — это информационно-аналитическая пане�
 <div>GISMA UI</div>
 </div>
 
+<!-- Красивое окно подтверждения -->
+<div id="confirmModal" class="modal">
+    <div class="modal-box">
+        <h2>Очистить панель?</h2>
+        <p>все данные, поля и фото будут удалены без возможности восстановления.</p>
+        <div class="modal-buttons">
+            <button id="cancelClear">Отмена</button>
+            <button id="confirmClear" class="danger">Очистить</button>
+        </div>
+    </div>
+</div>
 </div>
 
 <script>
@@ -248,11 +399,12 @@ function toggleReadonly(){
 panel.classList.toggle("readonly");
 }
 
-function loadPhoto(e){
-const img=document.getElementById("photo");
-img.src=URL.createObjectURL(e.target.files[0]);
-img.hidden=false;
-e.target.nextElementSibling.style.display="none";
+
+function loadPhoto(e, num){
+  const img = document.getElementById("photo"+num);
+  img.src = URL.createObjectURL(e.target.files[0]);
+  img.hidden = false;
+  e.target.nextElementSibling.style.display = "none";
 }
 
 function addField(){
@@ -312,6 +464,35 @@ const a=document.createElement("a");
 a.href=URL.createObjectURL(new Blob([data],{type}));
 a.download=name;a.click();
 }
+
+/* ===== ОЧИСТКА ПАНЕЛИ (ВСТАВИТЬ СЮДА) ===== */
+function clearPanel(){
+    
+    // 1. Удаляем ВСЕ добавленные поля (у тебя они в #fields)
+    document.getElementById("fields").innerHTML = "";
+
+    // 2. Очищаем фото
+    const photo = document.getElementById("photo");
+    photo.src = "";
+    photo.hidden = true;
+
+    // возвращаем надпись ADD PHOTO
+    const placeholder = document.querySelector(".photo-placeholder");
+    if(placeholder){
+        placeholder.style.display = "flex";
+    }
+
+    // 3. Очищаем инпуты добавления поля
+    document.getElementById("newLabel").value = "";
+    document.getElementById("newValue").value = "";
+
+    // 4. (если будет автосохранение в будущем)
+    localStorage.clear();
+
+    alert("панель полностью очищена");
+}
+</script>
+
 </script>
 
 </body>
