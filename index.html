@@ -324,6 +324,64 @@ display:flex;justify-content:space-between
   cursor:pointer;
   font-weight:600;
 }
+
+body{
+  background: radial-gradient(circle at top, #0b1020, #05070f);
+  font-family: 'Inter', sans-serif;
+  color: #dbe6f5;
+}
+
+/* Плавность всей панели */
+*{
+  transition: all 0.25s ease;
+}
+
+/* PRO кнопки меню */
+.proTabBtn{
+  width:100%;
+  background: rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.08);
+  color:#cbd5e1;
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:10px;
+  cursor:pointer;
+  text-align:left;
+  font-weight:500;
+}
+
+.proTabBtn:hover{
+  background: rgba(63,169,245,0.15);
+  border:1px solid rgba(63,169,245,0.35);
+  color:#ffffff;
+  transform: translateX(3px);
+}
+
+/* Активная вкладка */
+.activeProBtn{
+  background: linear-gradient(135deg,#3fa9f5,#2563eb);
+  color:white !important;
+  border: none !important;
+  box-shadow: 0 5px 20px rgba(63,169,245,0.4);
+}
+
+/* PRO контейнер */
+#proLayout{
+  animation: fadeIn 0.4s ease;
+}
+
+.proTab{
+  background: rgba(15,20,35,0.7);
+  padding:20px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(10px);}
+  to{opacity:1; transform:translateY(0);}
+}
 </style>
 </head>
 
@@ -555,6 +613,16 @@ display:flex;justify-content:space-between
       ">
         🔑 Ввести ключ
       </button>
+      <button onclick="exitProMode()" style="
+  background:#ef4444;
+  border:none;
+  color:white;
+  padding:8px 14px;
+  border-radius:10px;
+  cursor:pointer;
+">
+  🚪 Выйти из PRO
+</button>
     </div>
   </div>
   <!-- === PRO МЕНЮ (скрыто до активации PRO) === -->
@@ -684,11 +752,12 @@ display:flex;justify-content:space-between
 </div>
 
 </div>
-
+<div id="mainPanelContent">
+  
 <div class="section">
 <div class="section-title">Основные данные</div>
 <div id="fields"></div>
-
+</div>
 <div class="controls">
 <input id="newLabel" placeholder="Название поля">
 <input id="newValue" placeholder="Значение">
@@ -755,7 +824,7 @@ display:flex;justify-content:space-between
       cursor:pointer;
       transition:0.2s;
     ">
-      💳 Оплатить через Telegram
+          💳 Оплатить через Telegram
     </button>
 
     <button onclick="contactOwner()" style="
@@ -793,20 +862,6 @@ GISMA — это цифровая информационно-аналитиче�
     
     <a href="https://t.me/kramsov" target="_blank" style="
       color: var(--accent);
-      text-decoration: none;
-      font-weight: 500;
-      padding:4px 8px;
-      border-radius:6px;
-      transition:0.2s;
-    " onmouseover="this.style.background='rgba(63,169,245,0.12)'" 
-       onmouseout="this.style.background='transparent'">
-      Владелец: @krasmov
-    </a>
-
-    <span style="opacity:0.5;">•</span>
-
-    <a href="https://t.me/tgsaphx" target="_blank" style="
-            color: var(--accent);
       text-decoration: none;
       font-weight: 500;
       padding:4px 8px;
@@ -1358,31 +1413,79 @@ function enableProInterface(){
         const sections = document.querySelectorAll(".section");
         sections.forEach(sec => sec.style.display = "none");
     }
+    openProTab("data");
+}
+
+/* === ПРОФЕССИОНАЛЬНЫЙ PRO ИНТЕРФЕЙС GISMA === */
+
+function enableProInterface(){
+    const isPro = localStorage.getItem("gisma_pro") === "true";
+    const proLayout = document.getElementById("proLayout");
+    const mainContent = document.getElementById("mainPanelContent");
+
+    if(isPro){
+        if(proLayout) proLayout.style.display = "block";
+        if(mainContent) mainContent.style.display = "none";
+        openProTab("about"); // стартовая вкладка
+    } else {
+        if(proLayout) proLayout.style.display = "none";
+        if(mainContent) mainContent.style.display = "block";
+    }
 }
 
 function openProTab(tab){
 
-    // Скрываем все вкладки PRO
+    const mainContent = document.getElementById("mainPanelContent");
+
+    // скрываем всё
     document.querySelectorAll(".proTab").forEach(el=>{
         el.style.display = "none";
     });
 
-    // Скрываем старый контент данных
-    const dataContent = document.getElementById("dataContent");
-    if(dataContent){
-        dataContent.style.display = "none";
+    // показываем нужную вкладку
+    const active = document.getElementById("tab-" + tab);
+    if(active){
+        active.style.display = "block";
     }
 
-    // Показываем нужную вкладку
-    const activeTab = document.getElementById("tab-" + tab);
-    if(activeTab){
-        activeTab.style.display = "block";
+    // ЛОГИКА РАЗДЕЛОВ
+    if(tab === "data"){
+        if(mainContent) mainContent.style.display = "block";
+    } else {
+        if(mainContent) mainContent.style.display = "none";
     }
 
-    // Если нажали "Данные" — показываем рабочую панель
-    if(tab === "data" && dataContent){
-        dataContent.style.display = "block";
+    // подсветка активной кнопки
+    document.querySelectorAll(".proTabBtn").forEach(btn=>{
+        btn.classList.remove("activeProBtn");
+    });
+
+    const clickedBtn = event?.target;
+    if(clickedBtn){
+        clickedBtn.classList.add("activeProBtn");
     }
+}
+
+/* === ВЫХОД ИЗ PRO === */
+function exitProMode(){
+    localStorage.removeItem("gisma_pro");
+    localStorage.removeItem("gisma_license");
+    alert("Вы вышли из PRO режима");
+    location.reload();
+}
+
+window.addEventListener("load", enableProInterface);
+
+function exitProMode(){
+    // удаляем про лицензию
+    localStorage.removeItem("gisma_pro");
+    localStorage.removeItem("gisma_license");
+
+    // уведомление
+    alert("Вы вышли из PRO версии");
+
+    // перезагрузка панели
+    location.reload();
 }
 
 </script>
