@@ -296,6 +296,34 @@ display:flex;justify-content:space-between
 .readonly .action,
 .readonly .photo-box{display:none}
 .readonly .value{pointer-events:none}
+
+.proTabBtn{
+  width:100%;
+  background:transparent;
+  border:1px solid rgba(255,255,255,0.08);
+  color:#cbd5e1;
+  padding:10px;
+  border-radius:10px;
+  margin-bottom:8px;
+  cursor:pointer;
+  text-align:left;
+  transition:0.2s;
+}
+
+.proTabBtn:hover{
+  background:rgba(63,169,245,0.15);
+  color:#ffffff;
+}
+
+.proActionBtn{
+  background:linear-gradient(135deg,#3fa9f5,#2563eb);
+  border:none;
+  color:white;
+  padding:10px 18px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+}
 </style>
 </head>
 
@@ -484,39 +512,134 @@ display:flex;justify-content:space-between
 
 <div id="app" style="display:none;">
 <div class="wrapper">
-  <!-- === FREE / PRO БАННЕР === -->
-<div id="proBanner" style="
-  background: linear-gradient(145deg, #1a2338, #111827);
-  border: 1px solid rgba(63,169,245,0.25);
-  border-radius: 14px;
-  padding:16px;
+<!-- === ЛИЦЕНЗИЯ GISMA === -->
+<div id="licenseBox" style="
+  background: linear-gradient(145deg,#121a2b,#0e1422);
+  border:1px solid rgba(63,169,245,0.25);
+  border-radius:16px;
+  padding:18px;
   margin-bottom:20px;
-  text-align:center;
+  box-shadow:0 15px 40px rgba(0,0,0,0.4);
   font-family:'Inter', sans-serif;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
 ">
-  <div style="font-size:16px; font-weight:600; color:#dbe6f5;">
-    FREE версия панели
-  </div>
 
-  <div style="font-size:13px; color:#9fb3c8; margin-top:6px; line-height:1.6;">
-    Вы используете бесплатную версию GISMA с базовым функционалом.
-    Откройте PRO-доступ для расширенной аналитики, защиты и
-    дополнительных возможностей панели.
-  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;">
+    <div>
+      <div style="font-size:16px;font-weight:600;color:#dbe6f5;">
+        Лицензия GISMA
+      </div>
+      <div id="licenseStatus" style="font-size:13px;color:#facc15;margin-top:4px;">
+        FREE версия — ограниченный функционал
+      </div>
+    </div>
 
-  <button onclick="activatePro()" style="
-    margin-top:12px;
-    padding:9px 18px;
-    border-radius:10px;
-    border:none;
-    background:linear-gradient(135deg,#3fa9f5,#2563eb);
-    color:white;
-    font-weight:600;
-    cursor:pointer;
-  ">
-    🔓 Активировать PRO
-  </button>
+    <div style="display:flex;gap:10px;margin-top:10px;">
+      <button onclick="buyPro()" style="
+        background:linear-gradient(135deg,#3fa9f5,#2563eb);
+        border:none;
+        color:white;
+        padding:8px 14px;
+        border-radius:10px;
+        cursor:pointer;
+      ">
+        💎 Купить PRO
+      </button>
+
+      <button onclick="enterLicense()" style="
+        background:transparent;
+        border:1px solid rgba(255,255,255,0.2);
+        color:#cfd9e6;
+        padding:8px 14px;
+        border-radius:10px;
+        cursor:pointer;
+      ">
+        🔑 Ввести ключ
+      </button>
+    </div>
+  </div>
+  <!-- === PRO МЕНЮ (скрыто до активации PRO) === -->
+<div id="proLayout" style="display:none;">
+  
+  <div style="display:flex; gap:18px;">
+
+    <!-- ЛЕВОЕ МЕНЮ -->
+    <div style="
+      width:220px;
+      background:#0f172a;
+      border-radius:14px;
+      padding:16px;
+      border:1px solid rgba(255,255,255,0.08);
+      height:fit-content;
+    ">
+      <div style="
+        font-weight:700;
+        font-size:16px;
+        margin-bottom:14px;
+        color:#dbe6f5;
+      ">
+        GISMA PRO
+      </div>
+
+      <button class="proTabBtn" onclick="openProTab('about')">📊 О панели</button>
+      <button class="proTabBtn" onclick="openProTab('data')">🗂 Данные</button>
+      <button class="proTabBtn" onclick="openProTab('docs')">📄 Соглашение</button>
+      <button class="proTabBtn" onclick="openProTab('support')">💎 Поддержка</button>
+    </div>
+
+    <!-- КОНТЕНТ -->
+    <div style="flex:1;">
+
+      <div id="tab-about" class="proTab">
+        <div class="section-title">О панели</div>
+        <p style="color:#9fb3c8; line-height:1.7;">
+          GISMA — информационно-аналитическая панель для структурирования,
+          анализа и безопасной работы с данными в одном интерфейсе.
+          PRO версия предоставляет расширенный функционал,
+          улучшенную структуру интерфейса и профессиональный режим работы.
+        </p>
+      </div>
+      
+<div id="dataContent">
+
+    <!-- ВЕСЬ ТВОЙ СТАРЫЙ КОНТЕНТ ПАНЕЛИ -->
+    <!-- поля, кнопки, гисма, данные и т.д. -->
+
+</div>
+      <div id="tab-data" class="proTab" style="display:none;">
+        <div class="section-title">Работа с данными</div>
+        <p style="color:#9fb3c8;">
+          Здесь вы можете создавать, редактировать и управлять
+          информационными полями панели.
+        </p>
+        <!-- ТВОЯ СТАРАЯ ПАНЕЛЬ ДАННЫХ ОСТАНЕТСЯ НИЖЕ -->
+      </div>
+
+      <div id="tab-docs" class="proTab" style="display:none;">
+        <div class="section-title">Документация и соглашение</div>
+        <p style="color:#9fb3c8; line-height:1.7;">
+          Использование панели подразумевает соблюдение правил
+          конфиденциальности и корректной работы с данными.
+          Пользователь несёт ответственность за добавляемую информацию,
+          её хранение и использование внутри системы.
+        </p>
+      </div>
+
+      <div id="tab-support" class="proTab" style="display:none;">
+        <div class="section-title">Поддержка и донат</div>
+        <p style="color:#9fb3c8; margin-bottom:12px;">
+          Поддержка проекта помогает развитию панели,
+          добавлению новых функций и улучшению защиты системы.
+          Купить PRO версию можно у владельца панели.
+        </p>
+
+        <button onclick="openDonateTG()" class="proActionBtn">
+          💳 Поддержать через Telegram
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
 </div>
 <div class="topbar">
 <div>
@@ -653,7 +776,7 @@ display:flex;justify-content:space-between
 
 <b>GISMA — Digital Intelligence Interface</b><br><br>
 
-GISMA — это информационно-аналитическая панель для структурирования и фиксации данных в цифровой среде. Она создана для удобной работы с информацией при проведении OSINT-анализа, профайлинга и подготовки отчётов. Интерфейс позволяет добавлять и редактировать поля, сортировать их, визуально оформлять профиль с фотографией и сохранять данные в различных форматах для дальнейшего использования. Панель ориентирована на аккуратную систематизацию информации, контроль структуры и быстрый доступ к ключевым данным. Реализованы тёмная и светлая темы оформления, режим только для чтения для безопасной передачи материалов, а также экспорт в TXT, HTML и PDF. Дизайн выполнен в современном минималистичном стиле с акцентом на читаемость, удобство работы и профессиональный внешний вид, что делает панель подходящей как для личного использования, так и для подготовки аналитических материалов.
+GISMA — это цифровая информационно-аналитическая панель, предназначенная для структурирования, фиксации и систематизации данных в удобном интерфейсе. Она позволяет работать с информацией в одном пространстве, упрощая анализ, профайлинг и подготовку аналитических материалов. Панель ориентирована на аккуратную организацию данных, быстрый доступ к ключевой информации и удобную работу в цифровой среде.
 
 <div class="footer">
 <div style="
@@ -670,6 +793,20 @@ GISMA — это информационно-аналитическая пане�
     
     <a href="https://t.me/kramsov" target="_blank" style="
       color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+      padding:4px 8px;
+      border-radius:6px;
+      transition:0.2s;
+    " onmouseover="this.style.background='rgba(63,169,245,0.12)'" 
+       onmouseout="this.style.background='transparent'">
+      Владелец: @krasmov
+    </a>
+
+    <span style="opacity:0.5;">•</span>
+
+    <a href="https://t.me/tgsaphx" target="_blank" style="
+            color: var(--accent);
       text-decoration: none;
       font-weight: 500;
       padding:4px 8px;
@@ -1120,39 +1257,133 @@ function contactOwner(){
     window.open("https://t.me/kramsov", "_blank");
 }
 
-/* === FREE / PRO СИСТЕМА === */
+/* === ЛИЦЕНЗИОННАЯ СИСТЕМА GISMA === */
 
-function activatePro(){
-    const code = prompt("Введите PRO-код доступа:");
-    
-    // можешь изменить код на свой
-    if(code === "kramsov_pro_access"){
-        localStorage.setItem("gisma_pro", "true");
-        alert("PRO версия активирована!");
-        checkProStatus();
-    } else if(code !== null){
-        alert("Неверный PRO-код");
+const VALID_LICENSE_KEYS = [
+    "GISMA-PRO-2026",
+    "GISMA-ELITE-ACCESS",
+    "KRASMOV-PRO-KEY"
+];
+
+function checkLicense(){
+    const status = document.getElementById("licenseStatus");
+    const license = localStorage.getItem("gisma_license");
+
+    if(license && VALID_LICENSE_KEYS.includes(license)){
+        localStorage.setItem("gisma_pro","true");
+
+        status.textContent = "PRO лицензия активна ✔";
+        status.style.color = "#22c55e";
+
+        unlockProFeatures();
     }
 }
 
-function checkProStatus(){
-    const isPro = localStorage.getItem("gisma_pro") === "true";
-    const banner = document.getElementById("proBanner");
+function enterLicense(){
+    const key = prompt("Введите лицензионный ключ:");
 
-    if(isPro && banner){
-        banner.innerHTML = `
-            <div style="font-size:16px; font-weight:600; color:#22c55e;">
-                PRO версия активна
-            </div>
-            <div style="font-size:13px; color:#9fb3c8; margin-top:6px;">
-                Расширенный функционал панели разблокирован.
-                Доступны улучшенная защита, аналитика и приоритетные возможности.
-            </div>
-        `;
+    if(!key) return;
+
+    // имитация онлайн-проверки
+    const status = document.getElementById("licenseStatus");
+    status.textContent = "Проверка лицензии...";
+    status.style.color = "#3fa9f5";
+
+    setTimeout(() => {
+        if(VALID_LICENSE_KEYS.includes(key)){
+            localStorage.setItem("gisma_license", key);
+            localStorage.setItem("gisma_pro","true");
+            status.textContent = "PRO лицензия активирована ✔";
+            status.style.color = "#22c55e";
+            unlockProFeatures();
+        } else {
+            status.textContent = "Лицензия не найдена";
+            status.style.color = "#ef4444";
+        }
+    }, 1500);
+}
+
+function buyPro(){
+    alert("Купить PRO версию можно у владельца панели.");
+    window.open("https://t.me/kramsov", "_blank");
+}
+
+/* === ДОП ФУНКЦИИ PRO === */
+function unlockProFeatures(){
+
+    // 1. Разрешаем дополнительный экспорт
+    const exportSection = document.querySelector(".export");
+    if(exportSection){
+        const btn = document.createElement("button");
+        btn.innerText = "Экспорт JSON (PRO)";
+        btn.onclick = exportJSON;
+        exportSection.appendChild(btn);
+    }
+
+    // 2. Добавляем PRO бейдж
+    const title = document.querySelector(".title");
+    if(title){
+        title.innerHTML += " <span style='color:#22c55e;font-size:14px;'>PRO</span>";
     }
 }
 
-window.addEventListener("load", checkProStatus);
+function exportJSON(){
+    const data = [];
+    document.querySelectorAll(".field").forEach(f=>{
+        data.push({
+            label: f.querySelector(".label").innerText,
+            value: f.querySelector(".value").innerText
+        });
+    });
+
+    const blob = new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "gisma_pro_export.json";
+    a.click();
+}
+
+window.addEventListener("load", checkLicense);
+
+/* === PRO ИНТЕРФЕЙС === */
+
+function enableProInterface(){
+    const proLayout = document.getElementById("proLayout");
+    const wrapper = document.querySelector(".wrapper");
+
+    if(localStorage.getItem("gisma_pro") === "true"){
+        if(proLayout) proLayout.style.display = "block";
+
+        // скрываем старый беспорядочный вид (по желанию)
+        const sections = document.querySelectorAll(".section");
+        sections.forEach(sec => sec.style.display = "none");
+    }
+}
+
+function openProTab(tab){
+
+    // Скрываем все вкладки PRO
+    document.querySelectorAll(".proTab").forEach(el=>{
+        el.style.display = "none";
+    });
+
+    // Скрываем старый контент данных
+    const dataContent = document.getElementById("dataContent");
+    if(dataContent){
+        dataContent.style.display = "none";
+    }
+
+    // Показываем нужную вкладку
+    const activeTab = document.getElementById("tab-" + tab);
+    if(activeTab){
+        activeTab.style.display = "block";
+    }
+
+    // Если нажали "Данные" — показываем рабочую панель
+    if(tab === "data" && dataContent){
+        dataContent.style.display = "block";
+    }
+}
 
 </script>
 </div>
