@@ -704,7 +704,9 @@ body{
           💳 Поддержать через Telegram
         </button>
       </div>
-
+<button onclick="openAIBot()" class="proActionBtn">
+🤖 AI добавить данные (PRO)
+</button>
     </div>
   </div>
 </div>
@@ -827,7 +829,7 @@ body{
           💳 Оплатить через Telegram
     </button>
 
-    <button onclick="contactOwner()" style="
+       <button onclick="contactOwner()" style="
       background: transparent;
       border:1px solid rgba(255,255,255,0.25);
       color:#cfd9e6;
@@ -1486,6 +1488,35 @@ function exitProMode(){
 
     // перезагрузка панели
     location.reload();
+}
+
+function openAIBot(){
+    const text = prompt("Введите данные (пример: Имя: Иван, Город: Киев)");
+
+    if(!text) return;
+
+        // разделяем по запятым
+    const pairs = text.split(",");
+
+    pairs.forEach(pair=>{
+        const parts = pair.split(":");
+        if(parts.length === 2){
+            const label = parts[0].trim();
+            const value = parts[1].trim();
+
+            if(label && value){
+                const f=document.createElement("div");
+                f.className="field";
+                f.innerHTML=`
+                <div class="label">${label}</div>
+                <div class="value" contenteditable="true">${value}</div>
+                <div class="actions">
+                <span class="action" onclick="this.closest('.field').remove()">✖</span>
+                </div>`;
+                fields.appendChild(f);
+            }
+        }
+    });
 }
 
 </script>
